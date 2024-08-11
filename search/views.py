@@ -2,7 +2,7 @@ from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
-from .parts import generate_parts
+from .create import generate_parts
 from .filter import (
     filter_mark_part_params,
     filter_marks_params,
@@ -23,12 +23,16 @@ def parts_create(request, count):
 
 def models(request):
     list_models = model.objects.all()
+    if list_models.count() == 0:
+        generate_parts(count=10000)
     data = [{"name": m.name, "mark": m.mark.name} for m in list_models if m.is_visible]
     return JsonResponse(data, safe=False)
 
 
 def marks(request):
     list_marks = list(mark.objects.all())
+    if list_marks.count() == 0:
+        generate_parts(count=10000)
     data = [
         {"name": m.name, "producer_country_name": m.producer_country_name}
         for m in list_marks
@@ -41,6 +45,8 @@ def marks(request):
 def parts(request):
     query = json.loads(request.body)
     parts = part.objects.all()
+    if parts.count() == 0:
+        generate_parts(count=10000)
     if "mark_name" in query and "part_name" in query and "params" in query:
         parts = filter_mark_part_params(query=query, parts=parts)
     elif "mark_list" in query and "part_name" in query and "params" in query:
