@@ -23,7 +23,7 @@ def parts_create(request, count):
 
 def models(request):
     list_models = model.objects.all()
-    if list_models.count() == 0:
+    if len(list_models) == 0:
         generate_parts(count=10000)
     data = [{"name": m.name, "mark": m.mark.name} for m in list_models if m.is_visible]
     return JsonResponse(data, safe=False)
@@ -31,7 +31,7 @@ def models(request):
 
 def marks(request):
     list_marks = list(mark.objects.all())
-    if list_marks.count() == 0:
+    if len(list_marks) == 0:
         generate_parts(count=10000)
     data = [
         {"name": m.name, "producer_country_name": m.producer_country_name}
@@ -45,7 +45,7 @@ def marks(request):
 def parts(request):
     query = json.loads(request.body)
     parts = part.objects.all()
-    if parts.count() == 0:
+    if len(parts) == 0:
         generate_parts(count=10000)
     if "mark_name" in query and "part_name" in query and "params" in query:
         parts = filter_mark_part_params(query=query, parts=parts)
