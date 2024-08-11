@@ -25,15 +25,15 @@ def filter_marks_params(*, query, parts):
 
 def filter_other(*, query, parts):
     if "model_name" in query:
-        parts = parts.filter(model__name=query["model_name"])
+        parts = parts.filter(model__name__iexact=query["model_name"])
     if "mark_name" in query:
-        parts = parts.filter(mark__name=query["mark_name"])
+        parts = parts.filter(mark__name__iexact=query["mark_name"])
     if "params" in query:
-        parts = parts.filter(json_data__color=query["params"]["color"])
+        parts = parts.filter(json_data__color__iexact=query["params"]["color"])
     if "is_visible" in query:
         parts = parts.filter(is_visible=query["is_visible"])
     if "part_name" in query:
-        parts = parts.filter(name=query["part_name"])
+        parts = parts.filter(name__icontains=query["part_name"])
 
     return parts
 
