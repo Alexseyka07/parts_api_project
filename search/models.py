@@ -27,4 +27,5 @@ class part(models.Model):
         indexes = [
             models.Index(fields=["name", "mark", "json_data", "is_visible"]),
             models.Index(fields=["mark", "json_data", "is_visible"]),
+            models.Index(fields=["mark", "model","json_data", "is_visible"]),
         ]

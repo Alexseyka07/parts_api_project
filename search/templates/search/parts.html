@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+</head>
+<body>
+    <form action="parts_response" method="post">
+        <label>marks</label><br>
+        <label for="mersedes_is_visible">Mersedes</label>
+        <input type="checkbox" id="mersedes_is_visible" name="mark_list" value="1" onchange="if (this.checked) { document.getElementById('mark_list').value += '0,'; } else { document.getElementById('mark_list').value = document.getElementById('mark_list').value.replace('0,',''); }"><br>
+        <label for="bmw_is_visible" >BMW</label>
+        <input type="checkbox" id="bmw_is_visible" name="mark_list" value="2" onchange="if (this.checked) { document.getElementById('mark_list').value += '1,'; } else { document.getElementById('mark_list').value = document.getElementById('mark_list').value.replace('1,',''); }"><br>
+        <label for="honda_is_visible">Honda</label>
+        <input type="checkbox" id="honda_is_visible" name="mark_list" value="3" onchange="if (this.checked) { document.getElementById('mark_list').value += '2,'; } else { document.getElementById('mark_list').value = document.getElementById('mark_list').value.replace('2,',''); }"><br>
+        <label for="tesla_is_visible">Tesla</label>
+        <input type="checkbox" id="tesla_is_visible" name="mark_list" value="4" onchange="if (this.checked) { document.getElementById('mark_list').value += '3,'; } else { document.getElementById('mark_list').value = document.getElementById('mark_list').value.replace('3,',''); }"><br>
+        <label for="haval_is_visible">Haval</label>
+        <input type="checkbox" id="haval_is_visible" name="mark_list" value="5" onchange="if (this.checked) { document.getElementById('mark_list').value += '4,'; } else { document.getElementById('mark_list').value = document.getElementById('mark_list').value.replace('4,',''); }"><br>
+        <input type="hidden" id="mark_list" name="mark_list" value=""><br><br> 
+        <label for="model_name">model name</label>
+        <input type="text" id="model_name" name="model_name"><br><br>
+        <label for="part_name">part name</label>
+        <input type="text" id="part_name" name="part_name"><br><br>
+        <label for="color">color</label>
+        <input type="text" id="color" name="color"><br><br>
+        <label for="is_new_part">is new part</label>
+        <select name="is_new_part" id="is_new_part">
+            <option value="True">True</option>
+            <option value="">False</option>
+        </select><br><br>
+        <label for="price_gte">Минимальная цена</label>
+        <input type="number" id="price_gte" name="price_gte"><br><br>
+        <label for="price_lte">Минимальная цена</label>
+        <input type="number" id="price_lte" name="price_lte"><br><br>
+        <label for="page">page</label>
+        <input type="number" id="page" name="page" value="1"><br><br>
+        <input type="submit" value="submit">
+    </form>
+    {% if response is not None %}
+    <p>Response: {{ response }}</p>
+    <p>Count: {{ count }}</p>
+    <p>Summ: {{ summ }}</p>
+    {% else %}
+    <p>Response: Создайте запрос</p>
+    {% endif %}
+
+</body>
+</html>

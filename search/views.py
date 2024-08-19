@@ -1,12 +1,12 @@
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponse, render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
-from .create import generate_parts
+from .create import generate_parts, create_query
 from .filter import (
     filter_mark_part_params,
     filter_marks_params,
-    filter_other,
+    filter_mark_model,
     filter_price,
 )
 from .models import mark, model, part
@@ -41,20 +41,30 @@ def marks(request):
     return JsonResponse(data, safe=False)
 
 
-@csrf_exempt
 def parts(request):
-    query = json.loads(request.body)
+
+    marks = mark.objects.all()
+    return render(
+        request=request, context={"marks": marks}, template_name="search/parts.html"
+    )
+
+
+@csrf_exempt
+def parts_response(request):
+    print(request.body)
+    req = request.POST
     parts = part.objects.all()
     if len(parts) == 0:
         generate_parts(count=10000)
-    if "mark_name" in query and "part_name" in query and "params" in query:
+    query = create_query(req)
+    if "mark_name" in query and "part_name" in query and "color" in query["params"]:
         parts = filter_mark_part_params(query=query, parts=parts)
-    elif "mark_list" in query and "part_name" in query and "params" in query:
+    if "mark_list" in query and "part_name" in query and "color" in query["params"]:
         parts = filter_marks_params(query=query, parts=parts)
-    else:
-        parts = filter_other(query=query, parts=parts)
-    parts = filter_price(query=query, parts=parts)
+    if "mark_name" in query and "model_name" in query:
+        parts = filter_mark_model(query=query, parts=parts)
 
+    parts = filter_price(query=query, parts=parts)
     response = []
     summ = 0
     for p in parts:
@@ -76,6 +86,6 @@ def parts(request):
     index = (page - 1) * 10
     response = response[index : (index + 10)]
 
-    result = {"response": response, "count": len(parts), "summ": summ}
+    result = {"response": response, "count": len(parts), "summ": summ }
 
-    return JsonResponse(result, safe=False)
+    return render(request=request, context=result, template_name="search/parts.html")

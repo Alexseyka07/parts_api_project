@@ -6,4 +6,5 @@ urlpatterns = [
     path("model", views.models, name="models"),
     path("mark", views.marks, name="marks"),
     path("search/part", views.parts, name="parts"),
+    path("search/parts_response", views.parts_response, name="parts_response"),
 ]

@@ -104,3 +104,35 @@ def create_models() -> tuple[bool, str]:
         return True, ""
     except Exception as e:
         return False, str(e)
+
+def create_query(request):
+    query = {
+        "price_gte": request["price_gte"],
+        "price_lte": request["price_lte"],
+        "page": request["page"],
+    }
+    mark_list = request["mark_list"]
+    mark_list = mark_list.split(",")
+    mark_list = [(int(x) + 1) for x in filter(None, mark_list)]
+    if len(mark_list) == 0:
+        query["mark_list"] = [0, 1, 2, 3, 4]
+    elif len(mark_list) == 1:
+        query["mark_name"] = (mark.objects.all()[mark_list[0] - 1]).name
+    else:
+        query["mark_list"] = mark_list
+    if request["model_name"] != "":
+        query["model_name"] = request["model_name"]
+    if request["part_name"] != "":
+        query["part_name"] = request["part_name"]
+    if request["price_gte"] != "":
+        query["price_gte"] = request["price_gte"]
+    if request["price_lte"] != "":
+        query["price_lte"] = request["price_lte"]
+    query["params"] = {}
+    query["params"]["color"] = "all"
+    if request["color"] != "":
+        query["params"]["color"] = request["color"]
+
+    query["params"]["is_new_part"] = request["is_new_part"]
+
+    return query
